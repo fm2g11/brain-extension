@@ -19,3 +19,28 @@
 .right-align{
 	text-align:right;
 }
+
+.labels {
+    position: relative;
+}
+
+.lh-default {
+    line-height: 1.5 !important;
+}
+
+.d-inline-block {
+    display: inline-block !important;
+}
+
+.IssueLabel {
+    height: 20px;
+    padding: 0.15em 4px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 15px;
+    border-radius: 2px;
+    box-shadow: inset 0 -1px 0 rgba(27,31,35,0.12);
+}
+.v-align-text-top {
+    vertical-align: text-top !important;
+}
