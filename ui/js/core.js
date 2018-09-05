@@ -1,7 +1,10 @@
 var HOST = 'http://localhost:8888/';
 
-var item = _.template(`
+var colors = d3.scaleOrdinal(d3.schemeCategory10);
+
+var item_template = _.template(`
     <tr>
+        <td><%= tags %></td>
         <th><%= key %></th>
         <td><%= val %></td>
         <td class="right-align">
@@ -17,6 +20,14 @@ var item = _.template(`
     </tr>
 `);
 
+var tag_template = _.template(`
+    <a class="d-inline-block IssueLabel v-align-text-top"
+        style="background-color: <%= color %>; color: white"
+        title="<%= name %>" href="">
+        <%= name %>
+    </a>
+`);
+
 function get(params, callback){
     $.get(HOST + params).then(function(data){
         callback(data);
@@ -27,21 +38,34 @@ function get(params, callback){
 function add(){
     var key = $('#key').val();
     var val = $('#val').val();
+    var tags = $('#tags').val();
     if (key.length > 0 && val.length > 0){
   		get('?exists=1&key=' + key, function(exists){
             if (exists){
   		        var r = confirm(key + " already exist. Do you want to replace it?");
 		        if (r === false) return;
             }
-            get('?add=1&key=' + key + '&val=' + val, function(data){
+            get('?add=1&key=' + key + '&val=' + val + '&tags=' + tags, function(data){
 	  	        $('#key').val('');
 	  	        $('#val').val('');
+	  	        $('#tags').val('');
   	            refresh();
             });
         });
   	}
 };
 
+function gen_tags(tags){
+    var html = '';
+  	for (var i = 0; i < tags.length; i++){
+  	    var name = tags[i]
+  	    html += tag_template({
+  	        name: name,
+  	        color: colors(name)
+  	    })
+    }
+    return html
+}
 
 function refresh(){
    function _refresh(data){
@@ -49,10 +73,13 @@ function refresh(){
         var html = '';
 
   	    for (var i = 0; i < data.length; i++){
-  	        html += item({
-		        key: data[i][0],
-		  	    val: parse(data[i][1]),
-		  	    index: i
+  	        var item = data[i];
+  	        var tags = gen_tags(item['tags']);
+  	        html += item_template({
+		        key: item['key'],
+		  	    val: parse(item['val']),
+		  	    index: i,
+		  	    tags: tags
 		    });
 	    }
 	    $('#items').html(html);
@@ -61,9 +88,10 @@ function refresh(){
 };
 
 function edit(index) {
-    get('?getpair=1&index=' + index, function(data){
+    get('?getitem=1&index=' + index, function(data){
   	    $('#key').val(data['key']);
 	    $('#val').val(data['val']);
+	    $('#tags').val(data['tags']);
   	    window.scrollTo(0, 0);
   	});
 };
@@ -84,15 +112,7 @@ function parse(text){
         .replace(pattern, '<a href="$1" target="_blank">$1</a>')
         .replace(/\n/g, '<br />');
 }
-//function can_add(){
-//    var key = $('#key').val();
-//    var val = $('#val').val();
-//  	return (key.length > 0 && val.length > 0);
-//};
-//
-//function is_disabled(){
-//    return can_add() ? '' : 'disabled';
-//}
+
 
 $(document).ready(function(){
     refresh();

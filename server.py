@@ -37,7 +37,10 @@ def add(key, val, tags):
             'val': val,
             'tags': tags,
         })
+<<<<<<< HEAD
     DATA.sort()
+=======
+>>>>>>> e2737f47f35e0b37ac6a54363f2e1393c5ab91a2
     util.writejson(DATA, DATA_FILE)
 
 
