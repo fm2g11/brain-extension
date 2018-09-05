@@ -51,7 +51,7 @@ function refresh(){
   	    for (var i = 0; i < data.length; i++){
   	        html += item({
 		        key: data[i][0],
-		  	    val: data[i][1],
+		  	    val: parse(data[i][1]),
 		  	    index: i
 		    });
 	    }
@@ -78,6 +78,12 @@ function del(index) {
 	}
 };
 
+function parse(text){
+    var pattern = new RegExp("(http(s)?:\/\/[^ \n]+)", 'ig');
+    return text
+        .replace(pattern, '<a href="$1" target="_blank">$1</a>')
+        .replace(/\n/g, '<br />');
+}
 //function can_add(){
 //    var key = $('#key').val();
 //    var val = $('#val').val();
