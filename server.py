@@ -26,7 +26,8 @@ def get_path(path):
 
 def add(key, val, tags):
     global DATA
-    tags = [tag.strip() for tag in tags.lower().split(',')]
+    tags = (tag.strip() for tag in tags.lower().split(','))
+    tags = sorted(set(t for t in tags if len(t)))
     matches = [item for item in DATA if item['key'] == key]
     if matches:
         matches[0]['val'] = val
@@ -37,10 +38,7 @@ def add(key, val, tags):
             'val': val,
             'tags': tags,
         })
-<<<<<<< HEAD
-    DATA.sort()
-=======
->>>>>>> e2737f47f35e0b37ac6a54363f2e1393c5ab91a2
+    DATA.sort(key=lambda x: x['key'])
     util.writejson(DATA, DATA_FILE)
 
 
