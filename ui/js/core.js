@@ -1,6 +1,8 @@
 var HOST = 'http://localhost:8888/';
 
 var colors = d3.scaleOrdinal(d3.schemeCategory10);
+var converter = new showdown.Converter();
+
 
 var item_template = _.template(`
     <tr>
@@ -76,8 +78,8 @@ function refresh(){
   	        var item = data[i];
   	        var tags = gen_tags(item['tags']);
   	        html += item_template({
-		        key: item['key'],
-		  	    val: parse(item['val']),
+		        key: converter.makeHtml(item['key']),
+		  	    val: converter.makeHtml(parse(item['val'])),
 		  	    index: i,
 		  	    tags: tags
 		    });
@@ -117,4 +119,6 @@ function parse(text){
 $(document).ready(function(){
     refresh();
     $('#add').click(add);
+//    var simplemde = new SimpleMDE({ element: $("#val")[0] });
+
 });
