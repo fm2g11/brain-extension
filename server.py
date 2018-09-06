@@ -3,6 +3,8 @@ import json
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 import util
+import html
+
 
 UI_DIR = 'ui/'
 DATA_FILE = 'data/items.json'
@@ -26,6 +28,8 @@ def get_path(path):
 
 def add(key, val, tags):
     global DATA
+    key = html.escape(key)
+    val = html.escape(val)
     tags = (tag.strip() for tag in tags.lower().split(','))
     tags = sorted(set(t for t in tags if len(t)))
     matches = [item for item in DATA if item['key'] == key]
@@ -76,7 +80,7 @@ class RequestHandler(SimpleHTTPRequestHandler):
         path = ''
         params = get_params(self.path)
         response = bytes('{}', 'utf8')
-        print(util.blue(str(params)))
+        print(util.blue(params.__repr__().encode('utf8')))
         if 'add' in params and 'key' in params and 'val' in params:
             tags = params['tags'] if 'tags' in params else ''
             add(params['key'], params['val'], tags)
