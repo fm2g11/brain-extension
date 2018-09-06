@@ -1,41 +1,6 @@
-var HOST = 'http://' + ADDRESS + ':' + PORT;
 
 var colors = d3.scaleOrdinal(d3.schemeCategory10);
 var converter = new showdown.Converter();
-
-
-var item_template = _.template(`
-    <tr>
-        <td><%= tags %></td>
-        <th><%= key %></th>
-        <td><%= val %></td>
-        <td class="right-align">
-            <button class="btn btn-warning" onclick="edit(<%= index %>)">
-                <span class="glyphicon glyphicon-pencil"></span>
-            </button>
-        </td>
-        <td class="right-align" onclick="del(<%= index %>)">
-            <button class="btn btn-danger">
-                <span class="glyphicon glyphicon-remove"></span>
-            </button>
-        </td>
-    </tr>
-`);
-
-var tag_template = _.template(`
-    <a class="d-inline-block IssueLabel v-align-text-top"
-        style="background-color: <%= color %>; color: white"
-        title="<%= name %>" href="">
-        <%= name %>
-    </a>
-`);
-
-function get(params, callback){
-    $.get(HOST + params).then(function(data){
-        callback(data);
-    });
-}
-
 
 function add(){
     var key = $('#key').val();
@@ -51,7 +16,7 @@ function add(){
 	  	        $('#key').val('');
 	  	        $('#val').val('');
 	  	        $('#tags').val('');
-  	            refresh();
+	  	        refresh();
             });
         });
   	}
@@ -81,7 +46,8 @@ function refresh(){
 		        key: converter.makeHtml(item['key']),
 		  	    val: converter.makeHtml(parse(item['val'])),
 		  	    index: i,
-		  	    tags: tags
+		  	    tags: tags,
+		  	    hash: item['key'].hashCode()
 		    });
 	    }
 	    $('#items').html(html);
@@ -107,13 +73,6 @@ function del(index) {
 
 	}
 };
-
-function parse(text){
-    var pattern = new RegExp("(http(s)?:\/\/[^ \n]+)", 'ig');
-    return text
-        .replace(pattern, '<a href="$1" target="_blank">$1</a>')
-        .replace(/\n/g, '<br />');
-}
 
 
 $(document).ready(function(){
