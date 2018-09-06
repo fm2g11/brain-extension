@@ -15,3 +15,5 @@ echo '{}' > data/items.json
 ```shell
 python server.py
 ```
+
+Go to `http://localhost:8888/`
