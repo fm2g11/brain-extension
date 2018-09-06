@@ -76,7 +76,7 @@ class RequestHandler(SimpleHTTPRequestHandler):
         path = ''
         params = get_params(self.path)
         response = bytes('{}', 'utf8')
-        print(util.blue(str(params)))
+        print(util.blue(params.__repr__().encode('utf8')))
         if 'add' in params and 'key' in params and 'val' in params:
             tags = params['tags'] if 'tags' in params else ''
             add(params['key'], params['val'], tags)
