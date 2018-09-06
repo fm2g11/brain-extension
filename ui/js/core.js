@@ -1,4 +1,4 @@
-var HOST = 'http://www.fm2g11.com:8888/';
+var HOST = 'http://' + ADDRESS + ':' + PORT;
 
 var colors = d3.scaleOrdinal(d3.schemeCategory10);
 var converter = new showdown.Converter();

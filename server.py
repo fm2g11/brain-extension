@@ -9,6 +9,7 @@ UI_DIR = 'ui/'
 DATA_FILE = 'data/items.json'
 DATA = util.readjson(DATA_FILE)
 
+PORT = 8888
 
 def get_params(path):
     params_temp = parse_qs(urlparse(path).query)
@@ -120,10 +121,10 @@ def run():
   # Choose port 8080, for port 80, which is normally used for a http server,
   # you need root access
   # server_address = ('192.168.3.14', 8000)
-  server_address = ('0.0.0.0', 8888)
+  server_address = ('0.0.0.0', PORT)
 
   httpd = HTTPServer(server_address, RequestHandler)
-  print('running server...')
+  print(f'running server on port: {PORT}')
   httpd.serve_forever()
 
 
