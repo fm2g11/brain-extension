@@ -3,7 +3,6 @@ import json
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 import util
-import html
 
 
 UI_DIR = 'ui/'
@@ -28,8 +27,6 @@ def get_path(path):
 
 def add(key, val, tags):
     global DATA
-    key = html.escape(key)
-    val = html.escape(val)
     tags = (tag.strip() for tag in tags.lower().split(','))
     tags = sorted(set(t for t in tags if len(t)))
     matches = [item for item in DATA if item['key'] == key]
