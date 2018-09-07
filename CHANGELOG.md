@@ -2,6 +2,7 @@
 
 ## 2018/09/07
 - Added support for local storage to store certain keys locally
+- Moved api to POST
 
 ## 2018/09/06
 - Changed container to container-fluid and added support for markdown
