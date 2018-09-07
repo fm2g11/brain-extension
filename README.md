@@ -1,10 +1,9 @@
 # brain-extension
 
 ## Install
-```shell
-python3.6 -m venv venv
-source venv/bin/activate
+Requires python3.6
 
+```shell
 pip install -r requirements.txt
 
 mkdir data
