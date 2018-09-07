@@ -44,3 +44,7 @@
 .v-align-text-top {
     vertical-align: text-top !important;
 }
+
+.github{
+    float:right;
+}
