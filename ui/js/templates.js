@@ -4,12 +4,13 @@ var item_template = _.template(`
         <td><%= tags %></td>
         <th><%= key %></th>
         <td><%= val %></td>
+        <td><input type="checkbox" <%= localstorage %> disabled /></td>
         <td class="right-align">
-            <button class="btn btn-warning" onclick="edit(<%= index %>)">
+            <button class="btn btn-warning" onclick="edit('<%= index %>')">
                 <span class="glyphicon glyphicon-pencil"></span>
             </button>
         </td>
-        <td class="right-align" onclick="del(<%= index %>)">
+        <td class="right-align" onclick="del('<%= index %>')">
             <button class="btn btn-danger">
                 <span class="glyphicon glyphicon-remove"></span>
             </button>

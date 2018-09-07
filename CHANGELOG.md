@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2018/09/07
+- Added support for local storage to store certain keys locally
+
 ## 2018/09/06
 - Changed container to container-fluid and added support for markdown
 - Added html escaping for cross-site scripting
