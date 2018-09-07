@@ -61,7 +61,7 @@ function get_item_from_localstorage(index){
 function edit(index) {
     var pieces = index.split('_');
     if (pieces.length == 2){
-        index = pieces[2];
+        index = pieces[1];
         var item = get_item_from_localstorage(index);
   	    $('#key').val(item['key']);
 	    $('#val').val(item['val']);
