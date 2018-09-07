@@ -4,12 +4,12 @@ from http.server import HTTPServer, SimpleHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 import util
 
-
 UI_DIR = 'ui/'
 DATA_FILE = 'data/items.json'
 DATA = util.readjson(DATA_FILE)
 
 PORT = 8888
+
 
 def get_params(path):
     params_temp = parse_qs(urlparse(path).query)
@@ -71,7 +71,6 @@ def delete(index):
 
 class RequestHandler(SimpleHTTPRequestHandler):
 
-    # GET
     def do_GET(self):
         # Send response status code
         self.send_response(200)
@@ -79,18 +78,11 @@ class RequestHandler(SimpleHTTPRequestHandler):
         params = get_params(self.path)
         response = bytes('{}', 'utf8')
         print(util.blue(params.__repr__().encode('utf8')))
-        if 'add' in params and 'key' in params and 'val' in params:
-            tags = params['tags'] if 'tags' in params else ''
-            add(params['key'], params['val'], tags)
-            self.send_header('Content-type', 'application/json')
-        elif 'del' in params and 'index' in params:
+        if 'del' in params and 'index' in params:
             delete(params['index'])
             self.send_header('Content-type', 'application/json')
         elif 'get' in params:
             response = bytes(get(), 'utf8')
-            self.send_header('Content-type', 'application/json')
-        elif 'exists' in params and 'key' in params:
-            response = bytes(exists(params['key']), 'utf8')
             self.send_header('Content-type', 'application/json')
         elif 'getitem' in params and 'index' in params:
             response = bytes(getitem(params['index']), 'utf8')
@@ -114,18 +106,37 @@ class RequestHandler(SimpleHTTPRequestHandler):
         self.wfile.write(response)
         return
 
+    def do_POST(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'application/json')
+        self.end_headers()
+        data_string = self.rfile.read(int(self.headers['Content-Length']))
+        data_string = data_string.decode("utf-8")
+        data = get_params('?' + data_string)
+        print(util.blue(data))
+
+        response = bytes('{}', 'utf8')
+        if 'add' in data and 'key' in data and 'val' in data:
+            tags = data['tags'] if 'tags' in data else ''
+            add(data['key'], data['val'], tags)
+        elif 'exists' in data and 'key' in data:
+            response = bytes(exists(data['key']), 'utf8')
+
+        self.wfile.write(response)
+        return
+
 
 def run():
-  print('starting server...')
-  # Server settings
-  # Choose port 8080, for port 80, which is normally used for a http server,
-  # you need root access
-  # server_address = ('192.168.3.14', 8000)
-  server_address = ('0.0.0.0', PORT)
+    print('starting server...')
+    # Server settings
+    # Choose port 8080, for port 80, which is normally used for a http server,
+    # you need root access
+    # server_address = ('192.168.3.14', 8000)
+    server_address = ('0.0.0.0', PORT)
 
-  httpd = HTTPServer(server_address, RequestHandler)
-  print(f'running server on port: {PORT}')
-  httpd.serve_forever()
+    httpd = HTTPServer(server_address, RequestHandler)
+    print(f'running server on port: {PORT}')
+    httpd.serve_forever()
 
 
 run()

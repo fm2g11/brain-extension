@@ -20,12 +20,18 @@ function add(){
 }
 
 function add_to_db(key, val, tags){
-  	get('?exists=1&key=' + key, function(exists){
+  	post({exists: '1', key: key}, function(exists){
         if (exists){
   	        var r = confirm(key + " already exist. Do you want to replace it?");
 		    if (r === false) return;
         }
-        get('?add=1&key=' + key + '&val=' + val + '&tags=' + tags, function(data){
+        data = {
+            add: '1',
+            key: key,
+            val: val,
+            tags: tags
+        }
+        post(data, function(res){
             clear();
             refresh();
         });

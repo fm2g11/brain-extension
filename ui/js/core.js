@@ -21,7 +21,6 @@ function gen_tags(tags){
 }
 
 function make_table(data, localstorage){
-    console.log(data);
     var html = '';
     var is_local = localstorage == 'checked' ? 'local_' : '';
     for (var i = 0; i < data.length; i++){

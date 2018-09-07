@@ -29,3 +29,9 @@ function get(params, callback){
         callback(data);
     });
 }
+
+function post(data, callback){
+    $.post(HOST, data).then(function(res){
+        callback(res);
+    });
+}
