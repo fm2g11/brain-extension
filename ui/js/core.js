@@ -62,5 +62,7 @@ $(document).ready(function(){
     refresh();
     $('#add').click(add);
 //    var simplemde = new SimpleMDE({ element: $("#val")[0] });
+    var title = window.location.href.split('/')[2]
+    $(document).attr("title", 'brain-extension (' + title);
 
 });
