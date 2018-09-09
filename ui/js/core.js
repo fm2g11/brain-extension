@@ -49,9 +49,11 @@ function get_local_data(){
 function refresh(){
    function _refresh(data){
         var html = make_table(data, "unchecked");
-        html += make_table(get_local_data(), "checked");
+        var local_data = get_local_data()
+        html += make_table(local_data, "checked");
 
 	    $('#items').html(html);
+	    $('#stats').html(data.length + local_data.length + ' items. ');
    };
    get('/get?', _refresh);
 };
