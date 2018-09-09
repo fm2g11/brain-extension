@@ -1,18 +1,13 @@
 #!/usr/bin/env python3
 import argparse
-import json
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 import base64
-import util
+from backend import util
+from backend.brain import Brain
+from backend.constants import UI_DIR, __prog__
 
-__prog__ = 'brain-extension'
-
-UI_DIR = 'ui/'
-DATA_FILE = 'data/items.json'
-DATA = util.readjson(DATA_FILE)
-
-PORT = 8888
+brain = Brain()
 
 
 def get_params(path):
@@ -28,49 +23,6 @@ def get_path(path):
     if path == '':
         path = 'index.html'
     return path
-
-
-def add(key, val, tags):
-    global DATA
-    tags = (tag.strip() for tag in tags.lower().split(','))
-    tags = sorted(set(t for t in tags if len(t)))
-    matches = [item for item in DATA if item['key'] == key]
-    if matches:
-        matches[0]['val'] = val
-        matches[0]['tags'] = tags
-    else:
-        DATA.append({
-            'key': key,
-            'val': val,
-            'tags': tags,
-        })
-    DATA.sort(key=lambda x: x['key'])
-    util.writejson(DATA, DATA_FILE)
-
-
-def get():
-    return json.dumps(DATA)
-
-
-def exists(key):
-    keys = (item['key'] for item in DATA)
-    if key in keys:  # TODO: use binary search
-        return json.dumps(True)
-    return json.dumps(False)
-
-
-def getitem(index):
-    global DATA  # TODO: Package into class
-    index = int(index)
-    item = DATA[index]
-    return json.dumps(item)
-
-
-def delete(index):
-    global DATA
-    index = int(index)
-    DATA = DATA[:index] + DATA[index+1:]
-    util.writejson(DATA, DATA_FILE)
 
 
 class RequestHandler(SimpleHTTPRequestHandler):
@@ -114,13 +66,13 @@ class RequestHandler(SimpleHTTPRequestHandler):
         response = bytes('{}', 'utf8')
         print(util.blue(params.__repr__().encode('utf8')))
         if 'del' in params and 'index' in params:
-            delete(params['index'])
+            brain.delete(params['index'])
             self.send_header('Content-type', 'application/json')
         elif 'get' in params:
-            response = bytes(get(), 'utf8')
+            response = bytes(brain.get(), 'utf8')
             self.send_header('Content-type', 'application/json')
         elif 'getitem' in params and 'index' in params:
-            response = bytes(getitem(params['index']), 'utf8')
+            response = bytes(brain.getitem(params['index']), 'utf8')
             self.send_header('Content-type', 'application/json')
         else:
             path = get_path(self.path)
@@ -156,9 +108,9 @@ class RequestHandler(SimpleHTTPRequestHandler):
         response = bytes('{}', 'utf8')
         if 'add' in data and 'key' in data and 'val' in data:
             tags = data['tags'] if 'tags' in data else ''
-            add(data['key'], data['val'], tags)
+            brain.add(data['key'], data['val'], tags)
         elif 'exists' in data and 'key' in data:
-            response = bytes(exists(data['key']), 'utf8')
+            response = bytes(brain.exists(data['key']), 'utf8')
 
         self.wfile.write(response)
         return
