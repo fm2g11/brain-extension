@@ -32,18 +32,18 @@ def get(url, sent=None, headers=None, json=True):
         except JSONDecodeError as e:
             print(red(e))
             print(pink(url), blue(sent))
-            return {"value":"error"}
+            return {"value": "error"}
     else:
         return r.text
 
 
 def post(url, data, headers=None):
-    HEADERS={'Content-Type': 'application/json'}
+    headers_default = {'Content-Type': 'application/json'}
     if headers:
-        HEADERS.update(headers)
+        headers_default.update(headers)
     # data is dict
     # get params should be part of url
-    r = requests.post(url, data=json.dumps(data), headers=HEADERS)
+    r = requests.post(url, data=json.dumps(data), headers=headers_default)
     return r.json()
 
 
@@ -59,10 +59,13 @@ def mem(obj):
 
 #############################
 
+
 def words():
     return set(readlines('/usr/share/dict/words'))
 
 #############################
+
+
 def read(filename, bin=False):
     if bin:
         f = open(filename, 'rb')
@@ -71,6 +74,7 @@ def read(filename, bin=False):
     text = f.read()
     f.close()
     return text
+
 
 def write(text, filename, bin=False):
     if bin:
@@ -81,14 +85,17 @@ def write(text, filename, bin=False):
     f.write(text)
     f.close()
 
+
 def writelines(lines, filename, bin=False):
     write('\n'.join(lines), filename, bin=bin)
+
 
 def readlines(filename):
     f = open(filename, 'r')
     sents = [x[:-1] for x in f.readlines()]
     f.close()
     return sents
+
 
 def readcsv(filename, delimiter=',', quotes='"'):
     data = []
@@ -98,21 +105,28 @@ def readcsv(filename, delimiter=',', quotes='"'):
             data.append(row)
     return data
 
+
 def writecsv(data, filename, delimiter=',', quotes='"'):
     with open(filename, 'w') as csvfile:
         writer = csv.writer(csvfile, delimiter=delimiter, quotechar=quotes)
         for row in data:
             writer.writerow(row)
 
+
 def readjson(filename):
     return json.load(open(filename))
 
+
 def writejson(obj, filename):
-    json.dump(obj, open(filename,'w'), indent=2)
+    json.dump(obj, open(filename, 'w'), indent=2)
+
 
 #############################
+
+
 def start():
     return time.time()
+
 
 def lapsed(start, formatted=True, unit='s'):
     time_lapsed = round((time.time() - start), 4)
@@ -122,17 +136,23 @@ def lapsed(start, formatted=True, unit='s'):
         return time_lapsed
     return str(time_lapsed) + unit
 
+
 def percent(i, tot):
-    return str(round(100.0*i/tot,2)) + '%'
+    return str(round(100.0*i/tot, 2)) + '%'
 
 #############################
+
+
 def sortdict(dic, rev=False):
     return sorted(dic.items(), key=operator.itemgetter(1), reverse=rev)
 
 #############################
+
+
 def save(obj, filename):
     with open(filename, 'wb') as output:
         pickle.dump(obj, output, pickle.HIGHEST_PROTOCOL)
+
 
 def load(filename, v=False):
     start = time.time()
@@ -143,6 +163,8 @@ def load(filename, v=False):
         return obj
 
 #############################
+
+
 def files(dir):
     return [f for f in os.listdir(dir) if f[0] != '.']
 
@@ -152,41 +174,55 @@ def nlp():
     return spacy.load('en')
 
 #############################
+
+
 def red(s):
     return '\033[91m' + str(s) + '\033[0m'
+
 
 def yellow(s):
     return '\033[93m' + str(s) + '\033[0m'
 
+
 def green(s):
     return '\033[92m' + str(s) + '\033[0m'
+
 
 def blue(s):
     return '\033[94m' + str(s) + '\033[0m'
 
+
 def pink(s):
     return '\033[95m' + str(s) + '\033[0m'
+
 
 def lightblue(s):
     return '\033[96m' + str(s) + '\033[0m'
 
+
 def white(s):
     return '\033[97m' + str(s) + '\033[0m'
+
 
 def underline(s):
     return '\033[4m' + str(s) + '\033[0m'
 
+
 def bold(s):
     return '\033[1m' + str(s) + '\033[0m'
+
 
 def light(s):
     return '\033[2m' + str(s) + '\033[0m'
 
+
 def flash(s):
     return '\033[5m' + str(s) + '\033[0m'
 
+
 def orangefill(s):
     return '\033[100m' + str(s) + '\033[0m'
+
 
 def redfill(s):
     return '\033[101m' + str(s) + '\033[0m'
