@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
+import argparse
 import json
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
+import base64
 import util
+
+__prog__ = 'brain-extension'
 
 UI_DIR = 'ui/'
 DATA_FILE = 'data/items.json'
@@ -70,8 +74,39 @@ def delete(index):
 
 
 class RequestHandler(SimpleHTTPRequestHandler):
+    KEY = ''
+
+    def do_HEAD(self):
+        """ head method """
+        print("send header")
+        self.send_response(200)
+        self.send_header('Content-type', 'text/html')
+        self.end_headers()
+
+    def do_authhead(self):
+        """ do authentication """
+        print("send header")
+        self.send_response(401)
+        self.send_header('WWW-Authenticate', 'Basic realm=\"Test\"')
+        self.send_header('Content-type', 'text/html')
+        self.end_headers()
+
+    def do_auth(self):
+        auth = self.headers.get_all('Authorization')
+        if auth is None:
+            self.do_authhead()
+            self.wfile.write(b'no auth header received')
+        elif auth[0] == 'Basic ' + self.KEY.decode('utf8'):
+            return True
+        else:
+            self.do_authhead()
+            self.wfile.write(auth[0].encode('utf8'))
+            self.wfile.write(b'not authenticated')
+        return False
 
     def do_GET(self):
+        if not self.do_auth():
+            return
         # Send response status code
         self.send_response(200)
         path = ''
@@ -107,6 +142,9 @@ class RequestHandler(SimpleHTTPRequestHandler):
         return
 
     def do_POST(self):
+        if not self.do_auth():
+            return
+
         self.send_response(200)
         self.send_header('Content-type', 'application/json')
         self.end_headers()
@@ -132,10 +170,17 @@ def run():
     # Choose port 8080, for port 80, which is normally used for a http server,
     # you need root access
     # server_address = ('192.168.3.14', 8000)
-    server_address = ('0.0.0.0', PORT)
 
+    parser = argparse.ArgumentParser(prog=__prog__)
+    parser.add_argument('port', type=int, help='port number')
+    parser.add_argument('key', help='username:password')
+    args = parser.parse_args()
+    RequestHandler.KEY = base64.b64encode(args.key.encode('utf8'))
+
+    port = int(args.port)
+    server_address = ('0.0.0.0', port)
     httpd = HTTPServer(server_address, RequestHandler)
-    print(f'running server on port: {PORT}')
+    print(f'running server on port: {port}')
     httpd.serve_forever()
 
 
