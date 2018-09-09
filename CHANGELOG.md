@@ -2,6 +2,7 @@
 
 ## 2018/09/09
 - Added support for password
+- Added routes
 
 ## 2018/09/07
 - Added support for local storage to store certain keys locally

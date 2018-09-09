@@ -20,18 +20,20 @@ function add(){
 }
 
 function add_to_db(key, val, tags){
-  	post({exists: '1', key: key}, function(exists){
+    console.log('hey');
+  	post('/exists', {key: key}, function(exists){
+  	    console.log('here');
         if (exists){
   	        var r = confirm(key + " already exist. Do you want to replace it?");
 		    if (r === false) return;
         }
         data = {
-            add: '1',
             key: key,
             val: val,
             tags: tags
         }
-        post(data, function(res){
+        console.log('here');
+        post('/add', data, function(res){
             clear();
             refresh();
         });
@@ -75,7 +77,7 @@ function edit(index) {
 	    $('#localstorage').attr("checked", true);
   	    window.scrollTo(0, 0);
     } else {
-        get('?getitem=1&index=' + index, function(data){
+        get('/getitem?index=' + index, function(data){
   	        $('#key').val(data['key']);
 	        $('#val').val(data['val']);
 	        $('#tags').val(data['tags']);
@@ -94,7 +96,7 @@ function del(index) {
             localStorage.removeItem(localStorage.key(index));
   	        refresh();
         } else {
-	        get('?del=1&index=' + index, function(data){
+	        get('/delete?index=' + index, function(data){
   	            refresh();
   	        });
   	    }

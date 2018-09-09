@@ -6,6 +6,7 @@ import base64
 from backend import util
 from backend.brain import Brain
 from backend.constants import UI_DIR, __prog__
+from backend.routes import POST_ROUTES, GET_ROUTES
 
 brain = Brain()
 
@@ -37,7 +38,6 @@ class RequestHandler(SimpleHTTPRequestHandler):
 
     def do_authhead(self):
         """ do authentication """
-        print("send header")
         self.send_response(401)
         self.send_header('WWW-Authenticate', 'Basic realm=\"Test\"')
         self.send_header('Content-type', 'text/html')
@@ -56,28 +56,7 @@ class RequestHandler(SimpleHTTPRequestHandler):
             self.wfile.write(b'not authenticated')
         return False
 
-    def do_GET(self):
-        if not self.do_auth():
-            return
-        # Send response status code
-        self.send_response(200)
-        path = ''
-        params = get_params(self.path)
-        response = bytes('{}', 'utf8')
-        print(util.blue(params.__repr__().encode('utf8')))
-        if 'del' in params and 'index' in params:
-            brain.delete(params['index'])
-            self.send_header('Content-type', 'application/json')
-        elif 'get' in params:
-            response = bytes(brain.get(), 'utf8')
-            self.send_header('Content-type', 'application/json')
-        elif 'getitem' in params and 'index' in params:
-            response = bytes(brain.getitem(params['index']), 'utf8')
-            self.send_header('Content-type', 'application/json')
-        else:
-            path = get_path(self.path)
-            response = util.read(UI_DIR + path, bin=True)
-
+    def resolve_headers(self, path):
         # Send headers
         self.send_header('Access-Control-Allow-Origin', '*')
 
@@ -90,6 +69,23 @@ class RequestHandler(SimpleHTTPRequestHandler):
         elif path.endswith('.jpg'):
             self.send_header('Content-type', 'image/jpeg')
         self.end_headers()
+
+    def do_GET(self):
+        if not self.do_auth():
+            return
+        # Send response status code
+        self.send_response(200)
+        path = get_path(self.path)
+        params = get_params(self.path)
+        if path in GET_ROUTES:
+            method = getattr(brain, GET_ROUTES[path])
+            res = method(params) or '{}'
+            response = bytes(res, 'utf8')
+            self.send_header('Content-type', 'application/json')
+            self.resolve_headers('')
+        else:
+            response = util.read(UI_DIR + path, bin=True)
+            self.resolve_headers(path)
         self.wfile.write(response)
         return
 
@@ -103,16 +99,18 @@ class RequestHandler(SimpleHTTPRequestHandler):
         data_string = self.rfile.read(int(self.headers['Content-Length']))
         data_string = data_string.decode("utf-8")
         data = get_params('?' + data_string)
-        print(util.blue(data))
+        path = get_path(self.path)
+        response = b'{}'
 
-        response = bytes('{}', 'utf8')
-        if 'add' in data and 'key' in data and 'val' in data:
-            tags = data['tags'] if 'tags' in data else ''
-            brain.add(data['key'], data['val'], tags)
-        elif 'exists' in data and 'key' in data:
-            response = bytes(brain.exists(data['key']), 'utf8')
+        if path in POST_ROUTES:
+            method = getattr(brain, POST_ROUTES[path])
+            res = method(data) or '{}'
+            response = bytes(res, 'utf8')
+            self.send_header('Content-type', 'application/json')
 
         self.wfile.write(response)
+        print('DONE')
+        print(response)
         return
 
 

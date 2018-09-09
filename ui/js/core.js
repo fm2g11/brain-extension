@@ -53,7 +53,7 @@ function refresh(){
 
 	    $('#items').html(html);
    };
-   get('?get=1', _refresh);
+   get('/get?', _refresh);
 };
 
 $(document).ready(function(){

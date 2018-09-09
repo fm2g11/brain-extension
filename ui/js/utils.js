@@ -30,8 +30,8 @@ function get(params, callback){
     });
 }
 
-function post(data, callback){
-    $.post(HOST, data).then(function(res){
+function post(path, data, callback){
+    $.post(HOST + path, data).then(function(res){
         callback(res);
     });
 }
