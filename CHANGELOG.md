@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2018/09/12
+- Added tags recording in separate file and showed stats on ui.
+
 ## 2018/09/09
 - Added support for password
 - Added routes

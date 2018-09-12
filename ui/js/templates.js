@@ -26,3 +26,6 @@ var tag_template = _.template(`
     </a>
 `);
 
+var stats_template = _.template(`
+    <p class="stats"><%= items %> items. <%= tags %> tags</p>
+`)

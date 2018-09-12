@@ -6,8 +6,7 @@ Requires python3.6
 ```shell
 pip install -r requirements.txt
 
-mkdir data
-echo '[]' > data/items.json
+./build.sh
 ```
 
 ## Run

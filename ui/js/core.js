@@ -6,6 +6,7 @@ function clear(){
     $('#key').val('');
 	$('#val').val('');
 	$('#tags').val('');
+	$('#localstorage').attr("checked", false);
 }
 
 function gen_tags(tags){
@@ -37,23 +38,33 @@ function make_table(data, localstorage){
     }
     return html
 }
-function get_local_data(){
-    var local_data = [];
+function get_local_items(){
+    var local_items = [];
     for (var i = 0; i < localStorage.length; i++){
         var item = get_item_from_localstorage(i);
-        local_data.push(item);
+        local_items.push(item);
     }
-    return local_data;
+    return local_items;
+}
+
+function stats(data, local_items){
+    return stats_template({
+        items: data['items'].length + local_items.length,
+        tags: data['tags'].length,
+    })
 }
 
 function refresh(){
    function _refresh(data){
-        var html = make_table(data, "unchecked");
-        var local_data = get_local_data()
-        html += make_table(local_data, "checked");
+   console.log(data);
+        var items = data['items'];
+        var tags = data['tags'];
+        var html = make_table(items, "unchecked");
+        var local_items = get_local_items()
+        html += make_table(local_items, "checked");
 
 	    $('#items').html(html);
-	    $('#stats').html(data.length + local_data.length + ' items. ');
+	    $('#stats').html(stats(data, local_items));
    };
    get('/get?', _refresh);
 };
@@ -61,8 +72,6 @@ function refresh(){
 $(document).ready(function(){
     refresh();
     $('#add').click(add);
-//    var simplemde = new SimpleMDE({ element: $("#val")[0] });
-    var title = window.location.href.split('/')[2]
-    $(document).attr("title", 'brain-extension (' + title);
-
+    var title = window.location.href.split('/')[2];
+    $(document).attr("title", 'brain-extension (' + title + ')');
 });
