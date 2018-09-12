@@ -1,5 +1,5 @@
 import json
-from backend.constants import DATA_FILE
+from backend.constants import DATA_FILE, TAGS_FILE
 from . import util
 
 
@@ -7,9 +7,9 @@ class Brain:
 
     def __init__(self):
         self.data = util.readjson(DATA_FILE)
+        self.tags = util.readjson(TAGS_FILE)
 
     def add(self, data):
-        print('ADD method')
         key = data['key']
         val = data['val']
         tags = data['tags'] if 'tags' in data else ''
@@ -26,13 +26,25 @@ class Brain:
                 'tags': tags,
             })
         self.data.sort(key=lambda x: x['key'])
+
+        # tags
+        stored_tags = {tag['tag'] for tag in self.tags}
+        for tag in set(tags) - stored_tags:
+            self.tags.append({
+                'tag': tag,
+                'description': ''
+            })
         self.store()
 
     def store(self):
         util.writejson(self.data, DATA_FILE)
+        util.writejson(self.tags, TAGS_FILE)
 
     def get(self, params):
-        return json.dumps(self.data)
+        return json.dumps({
+            'items': self.data,
+            'tags': self.tags
+        })
 
     def exists(self, params):
         print('EXISTS method')
