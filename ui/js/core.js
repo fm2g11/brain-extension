@@ -56,7 +56,6 @@ function stats(data, local_items){
 
 function refresh(){
    function _refresh(data){
-   console.log(data);
         var items = data['items'];
         var tags = data['tags'];
         var html = make_table(items, "unchecked");
