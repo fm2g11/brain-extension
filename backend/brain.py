@@ -29,9 +29,6 @@ class Brain:
 
         # tags
         stored_tags = {tag['tag'] for tag in self.tags}
-        print(self.tags)
-        print(stored_tags)
-        print(util.yellow(tags))
         for tag in set(tags) - stored_tags:
             self.tags.append({
                 'tag': tag,
