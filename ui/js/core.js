@@ -1,3 +1,4 @@
+var CURRENT_TAB = 'knowledge';
 
 var colors = d3.scaleOrdinal(d3.schemeCategory10);
 var converter = new showdown.Converter();
@@ -27,6 +28,8 @@ function make_table(data, localstorage){
     for (var i = 0; i < data.length; i++){
         var item = data[i];
         var tags = gen_tags(item['tags']);
+        var tab = item['tab'];
+        if (tab != CURRENT_TAB) continue;
         html += item_template({
             key: converter.makeHtml(item['key']),
             val: converter.makeHtml(parse(item['val'])),
@@ -68,9 +71,23 @@ function refresh(){
    get('/get?', _refresh);
 };
 
+function knowledge_tab(){
+    CURRENT_TAB = 'knowledge';
+    refresh();
+}
+function thoughts_tab(){
+    CURRENT_TAB = 'thoughts';
+    refresh();
+}
+
+
 $(document).ready(function(){
+    $('#add_inputs').html(add_template());
+    $('#table').html(table_template());
     refresh();
     $('#add').click(add);
+    $('#knowledge-nav').click(knowledge_tab);
+    $('#thoughts-nav').click(thoughts_tab);
     var title = window.location.href.split('/')[2];
     $(document).attr("title", 'brain-extension (' + title + ')');
 });
