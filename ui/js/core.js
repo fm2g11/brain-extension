@@ -1,4 +1,7 @@
-var CURRENT_TAB = 'knowledge';
+var TABS = ['knowledge', 'thoughts']
+
+var loc = window.location.href.split('/')[3]
+var CURRENT_TAB = TABS.includes(loc) ? loc : 'knowledge';
 
 var colors = d3.scaleOrdinal(d3.schemeCategory10);
 var converter = new showdown.Converter();
