@@ -11,7 +11,7 @@ pip install -r requirements.txt
 
 ## Run
 ```shell
-python server.py 8888 user:psw
+python server.py 9000 user:psw
 ```
 
-Go to `http://localhost:8888/`
+Go to `http://localhost:9000/`

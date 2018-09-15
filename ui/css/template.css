@@ -57,3 +57,11 @@
     color: darkgrey;
     font-style: italic;
 }
+
+.bordered {
+    border: 1px solid black;
+}
+
+.margin-top {
+    margin-top: 20px;
+}

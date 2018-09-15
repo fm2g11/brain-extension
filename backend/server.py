@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import os
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 import base64
@@ -84,6 +85,8 @@ class RequestHandler(SimpleHTTPRequestHandler):
             self.send_header('Content-type', 'application/json')
             self.resolve_headers('')
         else:
+            if not os.path.isfile(UI_DIR + path):
+                path = 'index.html'
             response = util.read(UI_DIR + path, bin=True)
             self.resolve_headers(path)
         self.wfile.write(response)

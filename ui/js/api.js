@@ -14,15 +14,13 @@ function add(){
     var localstorage = $('#localstorage').prop('checked');
     if (key.length > 0 && val.length > 0)
         if (localstorage)
-            add_to_localstorage(key, val, tags);
+            add_to_localstorage(key, val, tags, CURRENT_TAB);
         else
-            add_to_db(key, val, tags);
+            add_to_db(key, val, tags, CURRENT_TAB);
 }
 
-function add_to_db(key, val, tags){
-    console.log('hey');
-  	post('/exists', {key: key}, function(exists){
-  	    console.log('here');
+function add_to_db(key, val, tags, tab){
+  	post('/exists', {key: key, tab: tab}, function(exists){
         if (exists){
   	        var r = confirm(key + " already exist. Do you want to replace it?");
 		    if (r === false) return;
@@ -30,7 +28,8 @@ function add_to_db(key, val, tags){
         data = {
             key: key,
             val: val,
-            tags: tags
+            tags: tags,
+            tab: tab
         }
         console.log('here');
         post('/add', data, function(res){
@@ -40,7 +39,7 @@ function add_to_db(key, val, tags){
     });
 }
 
-function add_to_localstorage(key, val, tags){
+function add_to_localstorage(key, val, tags, tab){
     var tags = parse_tags($('#tags').val());
     if (localStorage.getItem(key)){
         var r = confirm(key + " already exist. Do you want to replace it?");
@@ -48,7 +47,8 @@ function add_to_localstorage(key, val, tags){
     }
     var values = JSON.stringify({
         'val': val,
-        'tags': tags
+        'tags': tags,
+        'tab': tab
     });
     localStorage.setItem(key, values);
     clear();
@@ -61,7 +61,8 @@ function get_item_from_localstorage(index){
     return {
         key: key,
         val: values['val'],
-        tags: values['tags']
+        tags: values['tags'],
+        tab: values['tab']
     }
 }
 
@@ -102,5 +103,3 @@ function del(index) {
   	    }
 	}
 }
-
-

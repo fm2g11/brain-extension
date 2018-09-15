@@ -15,15 +15,18 @@ class Brain:
         tags = data['tags'] if 'tags' in data else ''
         tags = (tag.strip() for tag in tags.lower().split(','))
         tags = sorted(set(t for t in tags if len(t)))
+        tab = data['tab']
         matches = [item for item in self.data if item['key'] == key]
         if matches:
             matches[0]['val'] = val
             matches[0]['tags'] = tags
+            matches[0]['tab'] = tab
         else:
             self.data.append({
                 'key': key,
                 'val': val,
                 'tags': tags,
+                'tab': tab,
             })
         self.data.sort(key=lambda x: x['key'])
 
