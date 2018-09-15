@@ -62,7 +62,7 @@ function get_item_from_localstorage(index){
         key: key,
         val: values['val'],
         tags: values['tags'],
-        tabs: values['tab']
+        tab: values['tab']
     }
 }
 

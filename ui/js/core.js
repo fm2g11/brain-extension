@@ -53,9 +53,13 @@ function get_local_items(){
     return local_items;
 }
 
+function tab_filter(item){
+    return item['tab'] == CURRENT_TAB;
+}
+
 function stats(data, local_items){
     return stats_template({
-        items: data['items'].length + local_items.length,
+        items: data['items'].filter(tab_filter).length + local_items.filter(tab_filter).length,
         tags: data['tags'].length,
     })
 }
@@ -76,11 +80,18 @@ function refresh(){
 
 function knowledge_tab(){
     CURRENT_TAB = 'knowledge';
-    refresh();
+    window.location.href = CURRENT_TAB;
 }
 function thoughts_tab(){
     CURRENT_TAB = 'thoughts';
-    refresh();
+    window.location.href = CURRENT_TAB;
+}
+
+function set_active_tab(){
+    $('.nav-item').each(function(){
+        $(this).removeClass('active');
+    });
+    $('#' + CURRENT_TAB + '-nav').attr('class', 'active');
 }
 
 
@@ -91,6 +102,8 @@ $(document).ready(function(){
     $('#add').click(add);
     $('#knowledge-nav').click(knowledge_tab);
     $('#thoughts-nav').click(thoughts_tab);
+    set_active_tab();
+
     var title = window.location.href.split('/')[2];
     $(document).attr("title", 'brain-extension (' + title + ')');
 });
