@@ -14,15 +14,17 @@
         <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js"></script>
         <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.8.6/showdown.min.js"></script>
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script type='text/javascript' src='/js/lib/RadarChart.js'></script>
 
         <script type='text/javascript' src='/js/address.js'></script>
         <script type='text/javascript' src='/js/utils.js'></script>
         <script type='text/javascript' src='/js/templates.js'></script>
         <script type='text/javascript' src='/js/core.js'></script>
         <script type='text/javascript' src='/js/api.js'></script>
+        <script type='text/javascript' src='/js/skills.js'></script>
     </head>
     <body>
 
@@ -32,9 +34,7 @@
     			<!-- TOP BAR-->
     			<div class="row">
     				<div class="col-xs-4">
-                        <h1>
-				Brain Extension
-			</h1>
+                        <h1>Brain Extension</h1>
                     </div>
                     <div class="col-xs-7 margin-top">
                         <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -44,6 +44,9 @@
                             </li>
                             <li id="thoughts-nav" class="nav-item">
                                 <a class="nav-link " href="#" >Thoughts</a>
+                            </li>
+                            <li id="skills-nav" class="nav-item">
+                                <a class="nav-link " href="#" >Skills</a>
                             </li>
                             <li id="todo-nav" class="nav-item disabled">
                                 <a class="nav-link" href="#" >Todo</a>
@@ -62,9 +65,8 @@
     			</div>
 
     			<!-- MAIN CONTENT -->
-                <div id="add_inputs"></div>
-
-                <div id="table"></div>
+                <div id="main" align="center">
+                </div>
     		</div>
     	</div>
     </div>

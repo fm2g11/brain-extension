@@ -1,9 +1,9 @@
-var TABS = ['knowledge', 'thoughts']
+var TABS = ['knowledge', 'thoughts', 'skills']
 
 var loc = window.location.href.split('/')[3]
 var CURRENT_TAB = TABS.includes(loc) ? loc : 'knowledge';
 
-var colors = d3.scaleOrdinal(d3.schemeCategory10);
+var colors = d3.scale.ordinal(d3.schemeCategory10);
 var converter = new showdown.Converter();
 
 function clear(){
@@ -86,6 +86,10 @@ function thoughts_tab(){
     CURRENT_TAB = 'thoughts';
     window.location.href = CURRENT_TAB;
 }
+function skills_tab(){
+    CURRENT_TAB = 'skills';
+    window.location.href = CURRENT_TAB;
+}
 
 function set_active_tab(){
     $('.nav-item').each(function(){
@@ -96,14 +100,19 @@ function set_active_tab(){
 
 
 $(document).ready(function(){
-    $('#add_inputs').html(add_template());
-    $('#table').html(table_template());
-    refresh();
-    $('#add').click(add);
     $('#knowledge-nav').click(knowledge_tab);
     $('#thoughts-nav').click(thoughts_tab);
+    $('#skills-nav').click(skills_tab);
     set_active_tab();
 
+    // TODO: This is when I need controllers, I guess I'll have to reinvent them
+    if (['knowledge', 'thoughts'].includes(CURRENT_TAB))
+        $('#main').html(add_template() + table_template());
+        $('#add').click(add);
+        refresh();
+    if (CURRENT_TAB == 'skills'){
+        get('/get_skills?', make_skill_radar);
+    }
     var title = window.location.href.split('/')[2];
     $(document).attr("title", 'brain-extension (' + title + ')');
 });
