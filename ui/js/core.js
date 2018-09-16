@@ -3,7 +3,7 @@ var TABS = ['knowledge', 'thoughts', 'skills']
 var loc = window.location.href.split('/')[3]
 var CURRENT_TAB = TABS.includes(loc) ? loc : 'knowledge';
 
-var colors = d3.scale.ordinal(d3.schemeCategory10);
+var colors = d3.scale.category10();
 var converter = new showdown.Converter();
 
 function clear(){
