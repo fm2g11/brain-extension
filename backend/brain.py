@@ -1,5 +1,5 @@
 import json
-from backend.constants import DATA_FILE, TAGS_FILE
+from backend.constants import DATA_FILE, TAGS_FILE, SKILLS_FILE
 from . import util
 
 
@@ -68,3 +68,7 @@ class Brain:
         index = int(index)
         self.data = self.data[:index] + self.data[index+1:]
         self.store()
+
+    @staticmethod
+    def skills(params):
+        return json.dumps(util.readjson(SKILLS_FILE))

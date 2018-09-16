@@ -1,8 +1,13 @@
 # CHANGELOG
 
+## 2018/09/16
+- Added skills tab with radar chart
+
+## 2018/09/15
+- Added separate tabs for Knowledge and Thoughts and stubs for todo and tags labels
+
 ## 2018/09/12
 - Added tags recording in separate file and showed stats on ui.
-- Added separate tabs for Knowledge and Thoughts and stubs for todo and tags labels
 
 ## 2018/09/09
 - Added support for password
