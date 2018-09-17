@@ -93,7 +93,7 @@ function del(index) {
 	if (r === true) {
 	    var pieces = index.split('_');
         if (pieces.length == 2){
-            index = pieces[2];
+            index = pieces[1];
             localStorage.removeItem(localStorage.key(index));
   	        refresh();
         } else {
