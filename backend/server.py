@@ -119,10 +119,6 @@ class RequestHandler(SimpleHTTPRequestHandler):
 
 def run():
     print('starting server...')
-    # Server settings
-    # Choose port 8080, for port 80, which is normally used for a http server,
-    # you need root access
-    # server_address = ('192.168.3.14', 8000)
 
     parser = argparse.ArgumentParser(prog=__prog__)
     parser.add_argument('port', type=int, help='port number')
