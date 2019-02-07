@@ -48,7 +48,8 @@ function get_local_items(){
     var local_items = [];
     for (var i = 0; i < localStorage.length; i++){
         var item = get_item_from_localstorage(i);
-        local_items.push(item);
+        if (item)
+            local_items.push(item);
     }
     return local_items;
 }

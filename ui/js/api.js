@@ -58,12 +58,15 @@ function add_to_localstorage(key, val, tags, tab){
 function get_item_from_localstorage(index){
     var key = localStorage.key(index);
     var values = JSON.parse(localStorage.getItem(key));
-    return {
-        key: key,
-        val: values['val'],
-        tags: values['tags'],
-        tab: values['tab']
-    }
+    if ('val' in values && 'tags' in values && 'tab' in values)
+        return {
+            key: key,
+            val: values['val'],
+            tags: values['tags'],
+            tab: values['tab']
+        }
+    else
+        return null;
 }
 
 
